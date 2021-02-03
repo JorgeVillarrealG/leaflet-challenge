@@ -16,15 +16,17 @@ var myMap = L.map("map", {
   }).addTo(myMap);
 
 
-/* Get Data */
+/* Marker size function */
 let markers=[]
 function markerSize(mag){
     return mag*20000
 }
+/* Extrat Coordinates function */
 function coordinates(coordinates){
     array=[coordinates[1],coordinates[0]]
     return array
 }
+/* Set color Function */
 function getColor(feature){
     let color=""
     let magnitude=feature.properties.mag
@@ -43,11 +45,14 @@ function getColor(feature){
     }
     return color
 }
+/* Read Data */
 url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 d3.json(url).then(data=>{
     console.log(data)
+    /* Iterate on geojson features */
     data["features"].forEach(d=>{
        /*  console.log(coordinates(d.geometry.coordinates)) */
+       /* Create circles */
          L.circle(coordinates(d.geometry.coordinates),{
             stroke:false,
             fillOpacity:.75,
