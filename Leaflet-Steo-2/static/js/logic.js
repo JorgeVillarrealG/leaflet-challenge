@@ -100,7 +100,38 @@ d3.json(url).then(data=>{
             L.control.layers(baseMaps,overlayMaps,{
                 collapsed:false
             }).addTo(myMap)
+            
+// Set up the legend
+let legend = L.control({ 
+    position: "bottomright"
+ });
+ let limits=[0,1,2,3,4,5]
+ let colors=["#FFEDA0","#FEB24C","#FC4E2A","#E31A1C","#BD0026","#800026"]
 
+legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+    let labels = [];
+
+    // Add min & max
+    let legendInfo = "<p>Magnitudes</p>" +
+    "<div class=\"labels\">" +
+        "<div class=\"min\">" + limits[0] + "</div>" +
+        "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+    "</div>";
+
+    div.innerHTML = legendInfo;
+
+    // add the scale of colors with the values considered inside
+    limits.forEach(function(limit, index) {
+        labels.push("<li style=\"background-color: " + colors[index] + "\">"+limit+"</li>");
+    });
+
+    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    return div;
+};
+
+// Adding legend to the map
+legend.addTo(myMap);
 
 
 
@@ -111,6 +142,7 @@ d3.json(url).then(data=>{
 .catch(e=>{
     console.log(e)
 })
+
 
 
 

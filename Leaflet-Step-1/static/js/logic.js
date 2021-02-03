@@ -48,7 +48,7 @@ function getColor(feature){
 /* Read Data */
 url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 d3.json(url).then(data=>{
-    console.log(data)
+    /* console.log(data) */
     /* Iterate on geojson features */
     data["features"].forEach(d=>{
        /*  console.log(coordinates(d.geometry.coordinates)) */
@@ -65,36 +65,35 @@ d3.json(url).then(data=>{
 .catch(e=>{
     console.log(e)
 })
-/* var legend = L.control({position: 'bottomleft'});
-legend.onAdd = function () {
 
-var div = L.DomUtil.create('div', 'info legend');
-labels = ['<strong>Categories</strong>'],
-categories = ['Road Surface','Signage','Line Markings','Roadside Hazards','Other'];
+// Set up the legend
+let legend = L.control({ 
+    position: "bottomright"
+ });
+ let limits=[0,1,2,3,4,5]
+ let colors=["#FFEDA0","#FEB24C","#FC4E2A","#E31A1C","#BD0026","#800026"]
 
-    for (var i = 0; i < categories.length; i++) {
+legend.onAdd = function() {
+    let div = L.DomUtil.create("div", "info legend");
+    let labels = [];
 
-            div.innerHTML += 
-            labels.push(
-                '<i class="circle" style="background:' + getColor(categories[i]) + '"></i> ' +
-            (categories[i] ? categories[i] : '+'));
+    // Add min & max
+    let legendInfo = "<p>Magnitudes</p>" +
+    "<div class=\"labels\">" +
+        "<div class=\"min\">" + limits[0] + "</div>" +
+        "<div class=\"max\">" + limits[limits.length - 1] + "</div>" +
+    "</div>";
 
-        }
-        div.innerHTML = labels.join('<br>');
+    div.innerHTML = legendInfo;
+
+    // add the scale of colors with the values considered inside
+    limits.forEach(function(limit, index) {
+        labels.push("<li style=\"background-color: " + colors[index] + "\">"+limit+"</li>");
+    });
+
+    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
     return div;
-    }; */
+};
 
-/* let legend=L.control({position:"bottomright"})
-legend.onAdd=function(myMap){
-    let div =L.DomUtil.create("div","info legend"),
-    categories=[0,1,2,3,4,5];
-    // loop through our density intervals and generate a label with a colored square for each interval
-    for (var i = 0; i < categories.length; i++) {
-        div.innerHTML +=
-            '<i style="background:' + getColor(categories[i]) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
-    }
-
-    return div;
-} */
-/* legend.addTo(myMap) */
+// Adding legend to the map
+legend.addTo(myMap);
